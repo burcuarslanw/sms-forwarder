@@ -1,0 +1,36 @@
+name: APK derle
+
+# APK'yı bulutta derler ve indirilebilir çıktı olarak yükler.
+# Çalıştırmak için: repoyu GitHub'a at → Actions sekmesi → bu akış otomatik çalışır.
+# Biterse: ilgili çalışmanın altındaki "Artifacts > app-debug" dosyasını indir.
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:   # Actions sekmesinden elle de tetiklenebilir
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: JDK 17 kur
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Android SDK kur
+        uses: android-actions/setup-android@v3
+
+      - name: Debug APK derle
+        run: ./gradlew assembleDebug --no-daemon
+
+      # Debug APK, Android'in debug anahtarıyla v2 imzalı üretilir → telefona kurulur.
+      - name: APK'yı yükle
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug
+          path: app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error

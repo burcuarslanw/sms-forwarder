@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hedef"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" android:text="İsim"/>
+        <EditText android:id="@+id/name" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:hint="örn. Zoom - kendim"/>
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" android:text="Tür"/>
+        <Spinner android:id="@+id/kindSpinner" android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" android:text="Hazır şablon"/>
+        <Spinner android:id="@+id/presetSpinner" android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <!-- WEBHOOK alanları -->
+        <LinearLayout
+            android:id="@+id/webhookBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_marginTop="12dp" android:text="URL"/>
+            <EditText android:id="@+id/url" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:inputType="textUri"
+                android:hint="https://integrations.zoom.us/chat/webhooks/..."/>
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_marginTop="12dp" android:text="HTTP metodu"/>
+            <EditText android:id="@+id/method" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:text="POST"/>
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_marginTop="12dp" android:text="Başlık adı (ör. Authorization)"/>
+            <EditText android:id="@+id/headerName" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:hint="Authorization"/>
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_marginTop="12dp" android:text="Başlık değeri (Zoom doğrulama tokenı)"/>
+            <EditText android:id="@+id/headerValue" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:hint="token"/>
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_marginTop="12dp" android:text="Content-Type"/>
+            <EditText android:id="@+id/contentType" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:text="application/json"/>
+        </LinearLayout>
+
+        <!-- SMS alanları -->
+        <LinearLayout
+            android:id="@+id/smsBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_marginTop="12dp" android:text="Telefon numarası"/>
+            <EditText android:id="@+id/phone" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:inputType="phone"
+                android:hint="+90..."/>
+        </LinearLayout>
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" android:text="Mesaj şablonu"/>
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:textSize="12sp" android:textColor="#777777"
+            android:text="Değişkenler: {from} {body} {time} {rule}"/>
+        <EditText android:id="@+id/bodyTemplate" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:minLines="3" android:gravity="top"
+            android:inputType="textMultiLine" android:text="{body}"/>
+
+        <Button android:id="@+id/save" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:layout_marginTop="20dp"
+            android:text="Kaydet"/>
+    </LinearLayout>
+</ScrollView>
