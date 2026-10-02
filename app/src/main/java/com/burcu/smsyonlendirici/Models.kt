@@ -1,14 +1,17 @@
 package com.burcu.smsyonlendirici
 
 /** Nereye gönderileceği. */
-enum class TargetKind { WEBHOOK, SMS }
+enum class TargetKind { WEBHOOK, SMS, EMAIL }
 
 /** Kuralın SMS'i nasıl eşleştireceği. */
 enum class MatchMode { CONTAINS, REGEX }
 
 /**
- * Bir gönderim hedefi. WEBHOOK alanları Zoom/Slack/Discord/Telegram/genel webhook için ortak;
- * SMS hedefi için sadece [phone] ve [bodyTemplate] kullanılır.
+ * Bir gönderim hedefi.
+ * - WEBHOOK alanları Zoom/Slack/Discord/Telegram/genel webhook için ortak,
+ * - SMS hedefi için [phone],
+ * - EMAIL hedefi için smtp* alanları + [mailTo] + [subjectTemplate].
+ * [bodyTemplate] her türde mesaj/gövde metnidir.
  */
 data class Target(
     val id: String,
@@ -22,7 +25,14 @@ data class Target(
     var contentType: String = "application/json",
     var bodyTemplate: String = "{body}",
     // --- sms ---
-    var phone: String = ""
+    var phone: String = "",
+    // --- email (SMTP) ---
+    var smtpHost: String = "smtp.gmail.com",
+    var smtpPort: String = "587",
+    var smtpUser: String = "",
+    var smtpPass: String = "",
+    var mailTo: String = "",
+    var subjectTemplate: String = "SMS: {from}"
 )
 
 /**

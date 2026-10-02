@@ -125,7 +125,11 @@ class MainActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.permHint).visibility = if (need) View.VISIBLE else View.GONE
     }
 
-    private fun label(k: TargetKind) = if (k == TargetKind.WEBHOOK) "Webhook" else "SMS"
+    private fun label(k: TargetKind) = when (k) {
+        TargetKind.WEBHOOK -> "Webhook"
+        TargetKind.SMS -> "SMS"
+        TargetKind.EMAIL -> "E-posta"
+    }
 
     private fun hint(text: String): View {
         val tv = TextView(this)

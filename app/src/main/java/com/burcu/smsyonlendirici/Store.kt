@@ -35,7 +35,13 @@ object Store {
                     headerValue = o.optString("headerValue"),
                     contentType = o.optString("contentType", "application/json"),
                     bodyTemplate = o.optString("bodyTemplate", "{body}"),
-                    phone = o.optString("phone")
+                    phone = o.optString("phone"),
+                    smtpHost = o.optString("smtpHost", "smtp.gmail.com"),
+                    smtpPort = o.optString("smtpPort", "587"),
+                    smtpUser = o.optString("smtpUser"),
+                    smtpPass = o.optString("smtpPass"),
+                    mailTo = o.optString("mailTo"),
+                    subjectTemplate = o.optString("subjectTemplate", "SMS: {from}")
                 )
             )
         }
@@ -51,6 +57,9 @@ object Store {
             o.put("headerName", t.headerName); o.put("headerValue", t.headerValue)
             o.put("contentType", t.contentType); o.put("bodyTemplate", t.bodyTemplate)
             o.put("phone", t.phone)
+            o.put("smtpHost", t.smtpHost); o.put("smtpPort", t.smtpPort)
+            o.put("smtpUser", t.smtpUser); o.put("smtpPass", t.smtpPass)
+            o.put("mailTo", t.mailTo); o.put("subjectTemplate", t.subjectTemplate)
             arr.put(o)
         }
         p(c).edit().putString(K_TARGETS, arr.toString()).apply()

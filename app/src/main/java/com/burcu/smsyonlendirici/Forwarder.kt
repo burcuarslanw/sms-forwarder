@@ -7,10 +7,18 @@ import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.Properties
+import javax.mail.Authenticator
+import javax.mail.Message
+import javax.mail.PasswordAuthentication
+import javax.mail.Session
+import javax.mail.Transport
+import javax.mail.internet.InternetAddress
+import javax.mail.internet.MimeMessage
 
 /**
  * Şablondaki {from} {body} {time} {rule} değişkenlerini doldurur ve hedefe gönderir.
- * Ağ çağrısı HttpURLConnection ile yapılır (ekstra kütüphane yok).
+ * Webhook -> HttpURLConnection, SMS -> SmsManager, E-posta -> SMTP (JavaMail).
  */
 object Forwarder {
 
@@ -29,6 +37,7 @@ object Forwarder {
             when (t.kind) {
                 TargetKind.WEBHOOK -> sendWebhook(t, from, body, ruleName)
                 TargetKind.SMS -> sendSms(t, from, body, ruleName)
+                TargetKind.EMAIL -> sendEmail(t, from, body, ruleName)
             }
         } catch (e: Exception) {
             e.message ?: e.toString()
@@ -61,6 +70,40 @@ object Forwarder {
         val sm = SmsManager.getDefault()
         val parts = sm.divideMessage(text)
         sm.sendMultipartTextMessage(t.phone, null, parts, null, null)
+        return null
+    }
+
+    private fun sendEmail(t: Target, from: String, body: String, ruleName: String): String? {
+        val subject = render(t.subjectTemplate, from, body, ruleName)
+        val text = render(t.bodyTemplate, from, body, ruleName)
+        val to = t.mailTo.ifBlank { t.smtpUser }   // boşsa kendine gönder
+        val port = t.smtpPort.ifBlank { "587" }
+
+        val props = Properties()
+        props["mail.smtp.auth"] = "true"
+        props["mail.smtp.host"] = t.smtpHost
+        props["mail.smtp.port"] = port
+        if (port == "465") {
+            // SSL
+            props["mail.smtp.socketFactory.port"] = port
+            props["mail.smtp.socketFactory.class"] = "javax.net.ssl.SSLSocketFactory"
+        } else {
+            // STARTTLS (587)
+            props["mail.smtp.starttls.enable"] = "true"
+        }
+        props["mail.smtp.connectiontimeout"] = "20000"
+        props["mail.smtp.timeout"] = "20000"
+
+        val session = Session.getInstance(props, object : Authenticator() {
+            override fun getPasswordAuthentication() =
+                PasswordAuthentication(t.smtpUser, t.smtpPass)
+        })
+        val msg = MimeMessage(session)
+        msg.setFrom(InternetAddress(t.smtpUser))
+        msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to))
+        msg.subject = subject
+        msg.setText(text, "UTF-8")
+        Transport.send(msg)
         return null
     }
 }

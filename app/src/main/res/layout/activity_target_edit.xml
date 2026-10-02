@@ -80,6 +80,54 @@
                 android:hint="+90..."/>
         </LinearLayout>
 
+        <!-- E-posta (SMTP) alanları -->
+        <LinearLayout
+            android:id="@+id/emailBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginTop="12dp" android:textSize="12sp" android:textColor="#777777"
+                android:text="Gmail için: 2 Adımlı Doğrulamayı aç, sonra Google hesabından 16 haneli 'Uygulama Şifresi' üret ve aşağıya yapıştır."/>
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_marginTop="12dp" android:text="E-posta adresin (gönderen)"/>
+            <EditText android:id="@+id/smtpUser" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:inputType="textEmailAddress"
+                android:hint="adin@gmail.com"/>
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_marginTop="12dp" android:text="Uygulama şifresi (16 hane)"/>
+            <EditText android:id="@+id/smtpPass" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:inputType="textPassword"
+                android:hint="xxxx xxxx xxxx xxxx"/>
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_marginTop="12dp" android:text="Kime gönderilsin (boş = kendine)"/>
+            <EditText android:id="@+id/mailTo" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:inputType="textEmailAddress"
+                android:hint="hedef@ornek.com"/>
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_marginTop="12dp" android:text="Konu şablonu"/>
+            <EditText android:id="@+id/subject" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:text="SMS: {from}"/>
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_marginTop="12dp" android:text="SMTP sunucu / port (Gmail hazır)"/>
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <EditText android:id="@+id/smtpHost" android:layout_width="0dp"
+                    android:layout_weight="3" android:layout_height="wrap_content"
+                    android:text="smtp.gmail.com"/>
+                <EditText android:id="@+id/smtpPort" android:layout_width="0dp"
+                    android:layout_weight="1" android:layout_height="wrap_content"
+                    android:inputType="number" android:text="587"/>
+            </LinearLayout>
+        </LinearLayout>
+
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:layout_marginTop="12dp" android:text="Mesaj şablonu"/>
         <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
