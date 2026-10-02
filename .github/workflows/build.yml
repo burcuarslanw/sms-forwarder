@@ -1,12 +1,15 @@
 name: APK derle
 
-# APK'yı bulutta derler ve indirilebilir çıktı olarak yükler.
-# ubuntu-latest makinesinde Android SDK zaten kurulu gelir; ayrı kurulum gerekmez.
+# APK'yı bulutta derler, hem indirilebilir çıktı (artifact) olarak yükler
+# hem de repodaki dist/ klasörüne yazar.
 
 on:
   push:
     branches: [ main, master ]
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -26,7 +29,17 @@ jobs:
       - name: Debug APK derle
         run: ./gradlew assembleDebug --no-daemon --stacktrace
 
-      - name: APK'yı yükle
+      - name: APK'yı dist/ klasörüne yaz
+        run: |
+          mkdir -p dist
+          cp app/build/outputs/apk/debug/app-debug.apk dist/app-debug.apk
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f dist/app-debug.apk
+          git commit -m "APK çıktısı [skip ci]" || echo "degisiklik yok"
+          git push
+
+      - name: APK'yı artifact olarak yükle
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
