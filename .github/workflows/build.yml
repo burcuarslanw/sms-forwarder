@@ -1,13 +1,12 @@
 name: APK derle
 
 # APK'yı bulutta derler ve indirilebilir çıktı olarak yükler.
-# Çalıştırmak için: repoyu GitHub'a at → Actions sekmesi → bu akış otomatik çalışır.
-# Biterse: ilgili çalışmanın altındaki "Artifacts > app-debug" dosyasını indir.
+# ubuntu-latest makinesinde Android SDK zaten kurulu gelir; ayrı kurulum gerekmez.
 
 on:
   push:
     branches: [ main, master ]
-  workflow_dispatch:   # Actions sekmesinden elle de tetiklenebilir
+  workflow_dispatch:
 
 jobs:
   build:
@@ -21,13 +20,12 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Android SDK kur
-        uses: android-actions/setup-android@v3
+      - name: gradlew çalıştırılabilir yap
+        run: chmod +x ./gradlew
 
       - name: Debug APK derle
-        run: ./gradlew assembleDebug --no-daemon
+        run: ./gradlew assembleDebug --no-daemon --stacktrace
 
-      # Debug APK, Android'in debug anahtarıyla v2 imzalı üretilir → telefona kurulur.
       - name: APK'yı yükle
         uses: actions/upload-artifact@v4
         with:
