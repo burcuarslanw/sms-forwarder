@@ -3,9 +3,9 @@ package com.burcu.smsyonlendirici
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.CompoundButton
 import android.widget.EditText
 import android.widget.Spinner
-import android.widget.Switch
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
@@ -14,7 +14,7 @@ class RuleEditActivity : AppCompatActivity() {
     private var editing: Rule? = null
 
     private lateinit var name: EditText
-    private lateinit var enabled: Switch
+    private lateinit var enabled: CompoundButton
     private lateinit var sender: EditText
     private lateinit var body: EditText
     private lateinit var modeSpinner: Spinner

@@ -7,8 +7,8 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.CompoundButton
 import android.widget.LinearLayout
-import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -17,7 +17,8 @@ import androidx.core.content.ContextCompat
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var masterSwitch: Switch
+    private lateinit var masterSwitch: CompoundButton
+    private lateinit var statusText: TextView
     private lateinit var targetsBox: LinearLayout
     private lateinit var rulesBox: LinearLayout
     private lateinit var logView: TextView
@@ -32,6 +33,7 @@ class MainActivity : AppCompatActivity() {
         Notif.ensureChannel(this)
 
         masterSwitch = findViewById(R.id.masterSwitch)
+        statusText = findViewById(R.id.statusText)
         targetsBox = findViewById(R.id.targetsBox)
         rulesBox = findViewById(R.id.rulesBox)
         logView = findViewById(R.id.logView)
@@ -71,7 +73,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun refresh() {
-        masterSwitch.isChecked = Store.isEnabled(this)
+        val enabled = Store.isEnabled(this)
+        masterSwitch.isChecked = enabled
+        statusText.text = if (enabled) "Açık — gelen SMS'ler yönlendiriliyor" else "Kapalı"
 
         targetsBox.removeAllViews()
         val targets = Store.loadTargets(this)
