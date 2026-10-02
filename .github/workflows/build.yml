@@ -1,8 +1,5 @@
 name: APK derle
 
-# APK'yı bulutta derler, hem indirilebilir çıktı (artifact) olarak yükler
-# hem de repodaki dist/ klasörüne yazar.
-
 on:
   push:
     branches: [ main, master ]
@@ -27,19 +24,31 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Debug APK derle
-        run: ./gradlew assembleDebug --no-daemon --stacktrace
+        run: |
+          set -o pipefail
+          ./gradlew assembleDebug --no-daemon --stacktrace 2>&1 | tee /tmp/build.log
 
-      - name: APK'yı dist/ klasörüne yaz
+      - name: Derleme logunu repoya yaz (her durumda)
+        if: always()
         run: |
           mkdir -p dist
-          cp app/build/outputs/apk/debug/app-debug.apk dist/app-debug.apk
+          cp /tmp/build.log dist/build.log || echo "log yok" > dist/build.log
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f dist/build.log
+          git commit -m "derleme logu [skip ci]" || echo "degisiklik yok"
+          git push || echo "push basarisiz"
+
+      - name: APK'yı dist/ klasörüne yaz
+        if: success()
+        run: |
+          cp app/build/outputs/apk/debug/app-debug.apk dist/app-debug.apk
           git add -f dist/app-debug.apk
           git commit -m "APK çıktısı [skip ci]" || echo "degisiklik yok"
-          git push
+          git push || echo "push basarisiz"
 
       - name: APK'yı artifact olarak yükle
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
